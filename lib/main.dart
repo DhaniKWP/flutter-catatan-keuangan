@@ -1201,23 +1201,22 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   child: Column(
                     children: [
                       Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    const Icon(Icons.arrow_downward, color: Colors.greenAccent, size: 20),
-    const SizedBox(width: 5),
-    Flexible(
-      child: Text(
-        'Pemasukan',
-        style: GoogleFonts.poppins(
-          color: Colors.white70,
-          fontSize: 12,
-        ),
-        overflow: TextOverflow.ellipsis,
-      ),
-    ),
-  ],
-),
-
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.arrow_downward, color: Colors.greenAccent, size: 20),
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              'Pemasukan',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 5),
                       Text(
                         'Rp ${NumberFormat('#,###').format(income)}',
@@ -1242,23 +1241,22 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   child: Column(
                     children: [
                       Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    const Icon(Icons.arrow_upward, color: Colors.redAccent, size: 20),
-    const SizedBox(width: 6),
-    Flexible(
-      child: Text(
-        'Pengeluaran',
-        style: GoogleFonts.poppins(
-          color: Colors.white70,
-          fontSize: 12,
-        ),
-        overflow: TextOverflow.ellipsis,
-      ),
-    ),
-  ],
-),
-
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.arrow_upward, color: Colors.redAccent, size: 20),
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              'Pengeluaran',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 5),
                       Text(
                         'Rp ${NumberFormat('#,###').format(expense)}',
@@ -1621,7 +1619,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 Text(
                   transaction.description,
                   style: GoogleFonts.poppins(
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF333333),
                   ),
@@ -1632,7 +1630,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                     Text(
                       transaction.category,
                       style: GoogleFonts.poppins(
-                        fontSize: 12,
+                        fontSize: 8,
                         color: Colors.grey,
                       ),
                     ),
@@ -1640,7 +1638,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                     Text(
                       '• ${_getWalletEmoji(transaction.wallet)} ${transaction.wallet}',
                       style: GoogleFonts.poppins(
-                        fontSize: 12,
+                        fontSize: 8,
                         color: Colors.grey,
                       ),
                     ),
@@ -1649,7 +1647,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 Text(
                   DateFormat('dd MMM yyyy, HH:mm').format(transaction.date),
                   style: GoogleFonts.poppins(
-                    fontSize: 11,
+                    fontSize: 8,
                     color: Colors.grey,
                   ),
                 ),
@@ -1662,7 +1660,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
               Text(
                 '${transaction.type == 'income' ? '+' : '-'} Rp ${NumberFormat('#,###').format(transaction.amount)}',
                 style: GoogleFonts.poppins(
-                  fontSize: 16,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: transaction.type == 'income' ? Colors.green : Colors.red,
                 ),
