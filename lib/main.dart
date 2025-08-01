@@ -11,7 +11,7 @@ void main() {
 }
 
 class CuteMoneyTrackerApp extends StatelessWidget {
-  const CuteMoneyTrackerApp({Key? key}) : super(key: key);
+  const CuteMoneyTrackerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -494,7 +494,7 @@ class DatabaseHelper {
 
 // Main Screen with Enhanced Navigation
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -681,56 +681,60 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildHeader() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.pink.withValues(alpha: 0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.account_balance_wallet_rounded,
-              color: Color(0xFFFF69B4),
-              size: 30,
-            ),
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.pink.withValues(alpha: 0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Halo Cantik! 💕',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  'Yuk kelola uang kamu hari ini',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.white70,
-                  ),
-                ),
-              ],
-            ),
+          child: const Icon(
+            Icons.account_balance_wallet_rounded,
+            color: Color(0xFFFF69B4),
+            size: 30,
           ),
-          // Badge count indicator
-          if (_badges.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.all(8),
+        ),
+        const SizedBox(width: 15),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Halo Cantik! 💕',
+                style: GoogleFonts.poppins(
+                  fontSize: 22, // Kecilkan sedikit
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                'Yuk kelola uang kamu hari ini',
+                style: GoogleFonts.poppins(
+                  fontSize: 13, // Kecilkan sedikit
+                  color: Colors.white70,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+        // Badge count indicator dengan constraint
+        if (_badges.isNotEmpty)
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 60),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               decoration: BoxDecoration(
                 color: Colors.orange,
                 borderRadius: BorderRadius.circular(15),
@@ -738,177 +742,190 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.emoji_events, color: Colors.white, size: 16),
+                  const Icon(Icons.emoji_events, color: Colors.white, size: 14),
                   const SizedBox(width: 4),
-                  Text(
-                    '${_badges.length}',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                  Flexible(
+                    child: Text(
+                      '${_badges.length}',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
             ),
-        ],
-      ),
-    );
-  }
+          ),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildEnhancedTabBar() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 55,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.pink.withValues(alpha: 0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8), // Tambah margin agar tidak mepet
+    height: 55,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(25),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.pink.withOpacity(0.2),
+          blurRadius: 10,
+          offset: const Offset(0, 5),
+        ),
+      ],
+    ),
+    clipBehavior: Clip.hardEdge,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6), // Tambahkan padding dalam
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
           color: const Color(0xFFFF69B4),
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(20),
         ),
         labelColor: Colors.white,
         unselectedLabelColor: const Color(0xFFFF69B4),
         labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 10),
         unselectedLabelStyle: GoogleFonts.poppins(fontSize: 9),
         isScrollable: false,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 4), // Supaya antar-tab punya jarak
         tabs: const [
-          Tab(text: '💰 Dashboard'),
+          Tab(text: '💰 Home'),
           Tab(text: '📝 Transaksi'),
           Tab(text: '🎯 Goal'),
-          Tab(text: '🛍️ Wishlist'),
+          Tab(text: '🛍️ Wish'),
           Tab(text: '🏆 Badge'),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildDashboard() {
-    double totalIncome = _transactions
-        .where((t) => t.type == 'income')
-        .fold(0, (sum, t) => sum + t.amount);
-    double totalExpense = _transactions
-        .where((t) => t.type == 'expense')
-        .fold(0, (sum, t) => sum + t.amount);
-    double balance = totalIncome - totalExpense;
+  double totalIncome = _transactions
+      .where((t) => t.type == 'income')
+      .fold(0, (sum, t) => sum + t.amount);
+  double totalExpense = _transactions
+      .where((t) => t.type == 'expense')
+      .fold(0, (sum, t) => sum + t.amount);
+  double balance = totalIncome - totalExpense;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Filter buttons with better spacing
-          Container(
-            height: 50,
+  return SingleChildScrollView(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Filter buttons with proper spacing
+        SizedBox(
+          height: 50,
+          child: Row(
+            children: [
+              _buildFilterButton('daily', 'Harian', '📅'),
+              const SizedBox(width: 10),
+              _buildFilterButton('monthly', 'Bulanan', '📆'),
+              const SizedBox(width: 10),
+              _buildFilterButton('yearly', 'Tahunan', '🗓️'),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Wallet filter
+        SizedBox(
+          height: 45,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Row(
-              children: [
-                _buildFilterButton('daily', 'Harian', '📅'),
-                const SizedBox(width: 10),
-                _buildFilterButton('monthly', 'Bulanan', '📆'),
-                const SizedBox(width: 10),
-                _buildFilterButton('yearly', 'Tahunan', '🗓️'),
-              ],
+              children: _wallets.map((wallet) => 
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: _buildWalletFilter(wallet),
+                )
+              ).toList(),
             ),
           ),
-          const SizedBox(height: 20),
+        ),
+        const SizedBox(height: 25),
 
-          // Wallet filter
-          Container(
-            height: 45,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _wallets.map((wallet) => 
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: _buildWalletFilter(wallet),
-                  )
-                ).toList(),
-              ),
-            ),
-          ),
+        // Balance card
+        _buildBalanceCard(balance, totalIncome, totalExpense),
+        const SizedBox(height: 25),
+
+        // Analytics insight
+        _buildAnalyticsInsight(),
+        const SizedBox(height: 25),
+
+        // Active goals preview
+        if (_savingGoals.isNotEmpty) ...[
+          _buildActiveGoalsPreview(),
           const SizedBox(height: 25),
-
-          // Balance card with better spacing
-          _buildBalanceCard(balance, totalIncome, totalExpense),
-          const SizedBox(height: 25),
-
-          // Analytics insight card
-          _buildAnalyticsInsight(),
-          const SizedBox(height: 25),
-
-          // Active goals preview
-          if (_savingGoals.isNotEmpty) ...[
-            _buildActiveGoalsPreview(),
-            const SizedBox(height: 25),
-          ],
-
-          // Category chart
-          Text(
-            'Kategori Pengeluaran 🛍️',
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFFF69B4),
-            ),
-          ),
-          const SizedBox(height: 15),
-          Container(
-            height: 280,
-            child: _buildCategoryChart(),
-          ),
-          const SizedBox(height: 30),
         ],
-      ),
-    );
-  }
+
+        // Category chart section
+        Text(
+          'Kategori Pengeluaran 🛍️',
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFFFF69B4),
+          ),
+        ),
+        const SizedBox(height: 15),
+        SizedBox(
+          height: 280,
+          child: _buildCategoryChart(),
+        ),
+        const SizedBox(height: 30),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildWalletFilter(String wallet) {
-    bool isSelected = _selectedWallet == wallet;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedWallet = wallet;
-        });
-        _loadTransactions();
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFF69B4) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: const Color(0xFFFF69B4).withValues(alpha: 0.3),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.pink.withValues(alpha: 0.1),
-              blurRadius: 5,
-              offset: const Offset(0, 2),
-            ),
-          ],
+  bool isSelected = _selectedWallet == wallet;
+  return GestureDetector(
+    onTap: () {
+      setState(() {
+        _selectedWallet = wallet;
+      });
+      _loadTransactions();
+    },
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFFFF69B4) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFFFF69B4).withAlpha(77), // 0.3 * 255 ≈ 77
         ),
-        child: Text(
-          _getWalletEmoji(wallet) + ' ' + wallet,
-          style: GoogleFonts.poppins(
-            color: isSelected ? Colors.white : const Color(0xFFFF69B4),
-            fontWeight: FontWeight.w500,
-            fontSize: 12,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.pink.withAlpha(25), // 0.1 * 255 ≈ 25
+            blurRadius: 5,
+            offset: const Offset(0, 2),
           ),
+        ],
+      ),
+      child: Text(
+        '${_getWalletEmoji(wallet)} $wallet',
+        style: GoogleFonts.poppins(
+          color: isSelected ? Colors.white : const Color(0xFFFF69B4),
+          fontWeight: FontWeight.w500,
+          fontSize: 12,
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   String _getWalletEmoji(String wallet) {
     switch (wallet) {
@@ -930,8 +947,6 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     final now = DateTime.now();
     final thisMonthStart = DateTime(now.year, now.month, 1);
     final thisMonthEnd = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
-    final lastMonthStart = DateTime(now.year, now.month - 1, 1);
-    final lastMonthEnd = DateTime(now.year, now.month, 0, 23, 59, 59);
 
     // Get transactions for comparison
     double thisMonthExpense = _transactions
@@ -1149,38 +1164,39 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildBalanceCard(double balance, double income, double expense) {
-    return Container(
-      padding: const EdgeInsets.all(25),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFFF69B4),
-            Color(0xFFFF1493),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.pink.withValues(alpha: 0.4),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFFFF69B4),
+          Color(0xFFFF1493),
         ],
       ),
-      child: Column(
-        children: [
-          Text(
-            'Saldo Kamu',
-            style: GoogleFonts.poppins(
-              color: Colors.white70,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+      borderRadius: BorderRadius.circular(25),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.pink.withValues(alpha: 0.4),
+          blurRadius: 15,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        Text(
+          'Saldo Kamu',
+          style: GoogleFonts.poppins(
+            color: Colors.white70,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
-          const SizedBox(height: 10),
-          Text(
+        ),
+        const SizedBox(height: 10),
+        FittedBox(
+          child: Text(
             'Rp ${NumberFormat('#,###').format(balance)}',
             style: GoogleFonts.poppins(
               color: Colors.white,
@@ -1188,94 +1204,99 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.arrow_downward, color: Colors.greenAccent, size: 20),
-                          const SizedBox(width: 5),
-                          Flexible(
-                            child: Text(
-                              'Pemasukan',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white70,
-                                fontSize: 12,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.arrow_downward, color: Colors.greenAccent, size: 18),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            'Pemasukan',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white70,
+                              fontSize: 11,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    FittedBox(
+                      child: Text(
                         'Rp ${NumberFormat('#,###').format(income)}',
                         style: GoogleFonts.poppins(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.arrow_upward, color: Colors.redAccent, size: 20),
-                          const SizedBox(width: 5),
-                          Flexible(
-                            child: Text(
-                              'Pengeluaran',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white70,
-                                fontSize: 12,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.arrow_upward, color: Colors.redAccent, size: 18),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            'Pengeluaran',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white70,
+                              fontSize: 11,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    FittedBox(
+                      child: Text(
                         'Rp ${NumberFormat('#,###').format(expense)}',
                         style: GoogleFonts.poppins(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildCategoryChart() {
     Map<String, double> categoryData = {};
@@ -1689,22 +1710,25 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildSavingGoals() {
-  return SingleChildScrollView(
+  return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Target Tabungan 🎯',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFFFF69B4),
+            Expanded(
+              child: Text(
+                'Target Tabungan 🎯',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFFF69B4),
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
+            const SizedBox(width: 10),
             ElevatedButton(
               onPressed: () => _showAddGoalDialog(),
               style: ElevatedButton.styleFrom(
@@ -1726,48 +1750,16 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         ),
         const SizedBox(height: 20),
 
-        if (_savingGoals.isEmpty)
-          _buildEmptyGoalsState()
-        else
-          Column(
-            children: _savingGoals.map((goal) {
-              return Column(
-                children: [
-                  if (goal.progress >= 1.0)
-                    Container(
-                      margin: const EdgeInsets.only(top: 15),
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.green.withOpacity(0.3)),
-                      ),
-                      child: Row(
-                        children: [
-                          const Text('🎉', style: TextStyle(fontSize: 20)),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              'Selamat! Target "${goal.name}" tercapai! 🎊',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  // Bisa tambahin tampilan goal-nya di sini
-                ],
-              );
-            }).toList(),
-          ),
+        Expanded(
+          child: _savingGoals.isEmpty
+              ? _buildEmptyGoalsState()
+              : _buildGoalsList(),
+        ),
       ],
     ),
   );
 }
+
 
 
   Widget _buildWishlist() {
@@ -1777,16 +1769,19 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Wishlist Belanja 🛍️',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFFFF69B4),
+              Expanded(
+                child: Text(
+                  'Wishlist Belanja 🛍️',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFFFF69B4),
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () => _showAddWishlistDialog(),
                 style: ElevatedButton.styleFrom(
@@ -2035,7 +2030,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildBadgesAndAnalytics() {
+    Widget _buildBadgesAndAnalytics() {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -2050,11 +2045,11 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             ),
           ),
           const SizedBox(height: 20),
-          
+
           // Stats overview
           _buildStatsOverview(),
           const SizedBox(height: 25),
-          
+
           // Badges section
           Text(
             'Badge Kamu 🎖️',
@@ -2065,14 +2060,14 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             ),
           ),
           const SizedBox(height: 15),
-          
+
           if (_badges.isEmpty)
             _buildEmptyBadgesState()
           else
             _buildBadgesList(),
-            
+
           const SizedBox(height: 25),
-          
+
           // Monthly spending chart
           Text(
             'Grafik Pengeluaran Bulanan 📊',
@@ -2083,7 +2078,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             ),
           ),
           const SizedBox(height: 15),
-          Container(
+          
+          // ✅ Ganti Container ke SizedBox
+          SizedBox(
             height: 250,
             child: _buildMonthlyChart(),
           ),
@@ -2237,83 +2234,86 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildBadgesList() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.2,
-        crossAxisSpacing: 15,
-        mainAxisSpacing: 15,
-      ),
-      itemCount: _badges.length,
-      itemBuilder: (context, index) {
-        final badge = _badges[index];
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.pink.withValues(alpha: 0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
+    Widget _buildBadgesList() {
+      return SizedBox(
+        height: 230, // ⬅️ Batasi tinggi agar tidak overflow
+        child: GridView.builder(
+          scrollDirection: Axis.horizontal, // ⬅️ Ubah jadi horizontal scroll
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+            childAspectRatio: 1.1,
+            mainAxisSpacing: 15,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+          itemCount: _badges.length,
+          itemBuilder: (context, index) {
+            final badge = _badges[index];
+            return Container(
+              width: 160,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.pink.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
                   ),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Text(
-                  badge.emoji,
-                  style: const TextStyle(fontSize: 28),
-                ),
+                ],
               ),
-              const SizedBox(height: 12),
-              Text(
-                badge.name,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF333333),
-                ),
-                textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Text(
+                      badge.emoji,
+                      style: const TextStyle(fontSize: 28),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    badge.name,
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF333333),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    badge.description,
+                    style: GoogleFonts.poppins(
+                      fontSize: 10,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    DateFormat('dd MMM yyyy').format(badge.earnedDate),
+                    style: GoogleFonts.poppins(
+                      fontSize: 9,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                badge.description,
-                style: GoogleFonts.poppins(
-                  fontSize: 10,
-                  color: Colors.grey,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                DateFormat('dd MMM yyyy').format(badge.earnedDate),
-                style: GoogleFonts.poppins(
-                  fontSize: 9,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+            );
+          },
+        ),
+      );
+    }
+
 
   Widget _buildMonthlyChart() {
     // Get data for the last 6 months
@@ -2415,7 +2415,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildCuteFloatingActionButton(BuildContext context) {
+    Widget _buildCuteFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () => _showAddTransactionDialog(),
       backgroundColor: const Color(0xFFFF69B4),
@@ -2431,7 +2431,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: Colors.pink.withOpacity(0.4),
+              color: Colors.pink.withAlpha(102), // ✅ diperbaiki
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -2445,6 +2445,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
       ),
     );
   }
+
 
 
   Widget _buildEmptyGoalsState() {
@@ -2745,46 +2746,47 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => StatefulBuilder(
-        builder: (context, setState) => Container(
-          height: MediaQuery.of(context).size.height * 0.85,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
-            ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Center(
-                  child: Container(
-                    width: 50,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+  builder: (context, setState) => Container(
+    decoration: const BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(25),
+        topRight: Radius.circular(25),
+      ),
+    ),
+    child: SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: Container(
+                width: 50,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'Tambah Transaksi 💰',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFFFF69B4),
-                  ),
-                ),
-                const SizedBox(height: 25),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Tambah Transaksi 💰',
+              style: GoogleFonts.poppins(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFFF69B4),
+              ),
+            ),
+            const SizedBox(height: 25),
                 
                 // Type selection
                 Text(
@@ -3020,7 +3022,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                     ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 30),
                 
                 // Save button
                 SizedBox(
@@ -3039,8 +3041,10 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                         
                         await _dbHelper.insertTransaction(transaction);
                         await _loadAllData();
+
+                        if (!context.mounted) return;
                         Navigator.pop(context);
-                        
+
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -3073,6 +3077,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             ),
           ),
         ),
+      ),
       ),
     );
   }
@@ -3300,17 +3305,21 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                         
                         await _dbHelper.insertSavingGoal(goal);
                         await _loadAllData();
-                        Navigator.pop(context);
                         
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Target tabungan berhasil dibuat! 🎯',
-                              style: GoogleFonts.poppins(),
+                        // Check if the widget is still mounted before using context
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Target tabungan berhasil dibuat! 🎯',
+                                style: GoogleFonts.poppins(),
+                              ),
+                              backgroundColor: const Color(0xFFFF69B4),
                             ),
-                            backgroundColor: const Color(0xFFFF69B4),
-                          ),
-                        );
+                          );
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -3338,291 +3347,30 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     );
   }
 
-  void _showAddWishlistDialog() {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController priceController = TextEditingController();
-    String selectedEmoji = '🛍️';
-    String selectedPriority = 'medium';
-    
-    final List<String> emojiOptions = [
-      '🛍️', '👗', '👠', '💄', '📱', '💻', '🎮', '📚', '🏠', '🚗'
-    ];
-    
-    final List<Map<String, dynamic>> priorities = [
-      {'value': 'high', 'label': 'Prioritas Tinggi', 'color': Colors.red},
-      {'value': 'medium', 'label': 'Prioritas Sedang', 'color': Colors.orange},
-      {'value': 'low', 'label': 'Prioritas Rendah', 'color': Colors.green},
-    ];
+  // Perbaikan untuk method _showAddWishlistDialog()
+void _showAddWishlistDialog() {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  String selectedEmoji = '🛍️';
+  String selectedPriority = 'medium';
+  
+  final List<String> emojiOptions = [
+    '🛍️', '👗', '👠', '💄', '📱', '💻', '🎮', '📚', '🏠', '🚗'
+  ];
+  
+  final List<Map<String, dynamic>> priorities = [
+    {'value': 'high', 'label': 'Prioritas Tinggi', 'color': Colors.red},
+    {'value': 'medium', 'label': 'Prioritas Sedang', 'color': Colors.orange},
+    {'value': 'low', 'label': 'Prioritas Rendah', 'color': Colors.green},
+  ];
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => Container(
-          height: MediaQuery.of(context).size.height * 0.8,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
-            ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 50,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'Tambah ke Wishlist 🛍️',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFFFF69B4),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                
-                // Name input
-                Text(
-                  'Nama Barang',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF333333),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: TextField(
-                    controller: nameController,
-                    style: GoogleFonts.poppins(),
-                    decoration: InputDecoration(
-                      hintText: 'Contoh: Dress cantik, Sepatu heels',
-                      hintStyle: GoogleFonts.poppins(color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(20),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                
-                // Price input
-                Text(
-                  'Harga',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF333333),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: TextField(
-                    controller: priceController,
-                    keyboardType: TextInputType.number,
-                    style: GoogleFonts.poppins(),
-                    decoration: InputDecoration(
-                      hintText: 'Masukkan harga',
-                      hintStyle: GoogleFonts.poppins(color: Colors.grey),
-                      prefixText: 'Rp ',
-                      prefixStyle: GoogleFonts.poppins(
-                        color: const Color(0xFFFF69B4),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(20),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                
-                // Emoji selection
-                Text(
-                  'Pilih Emoji',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF333333),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  height: 60,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: emojiOptions.length,
-                    itemBuilder: (context, index) {
-                      final emoji = emojiOptions[index];
-                      return GestureDetector(
-                        onTap: () => setState(() => selectedEmoji = emoji),
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: selectedEmoji == emoji 
-                                ? const Color(0xFFFF69B4).withValues(alpha: 0.2)
-                                : Colors.grey.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: selectedEmoji == emoji 
-                                  ? const Color(0xFFFF69B4)
-                                  : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
-                          child: Text(emoji, style: const TextStyle(fontSize: 24)),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-                
-                // Priority selection
-                Text(
-                  'Prioritas',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF333333),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  children: priorities.map((priority) {
-                    return GestureDetector(
-                      onTap: () => setState(() => selectedPriority = priority['value']),
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: selectedPriority == priority['value']
-                              ? priority['color'].withValues(alpha: 0.1)
-                              : Colors.grey.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: selectedPriority == priority['value']
-                                ? priority['color']
-                                : Colors.transparent,
-                            width: 2,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: priority['color'],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Text(
-                              priority['label'],
-                              style: GoogleFonts.poppins(
-                                color: selectedPriority == priority['value']
-                                    ? priority['color']
-                                    : Colors.grey[700],
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                const Spacer(),
-                
-                // Save button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (nameController.text.isNotEmpty && priceController.text.isNotEmpty) {
-                        final item = WishlistItem(
-                          name: nameController.text,
-                          price: double.parse(priceController.text),
-                          emoji: selectedEmoji,
-                          priority: selectedPriority,
-                          createdDate: DateTime.now(),
-                        );
-                        
-                        await _dbHelper.insertWishlistItem(item);
-                        await _loadAllData();
-                        Navigator.pop(context);
-                        
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Item berhasil ditambahkan ke wishlist! 🛍️',
-                              style: GoogleFonts.poppins(),
-                            ),
-                            backgroundColor: const Color(0xFFFF69B4),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF69B4),
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    child: Text(
-                      'Tambah ke Wishlist 🛍️',
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showAddMoneyToGoalDialog(SavingGoal goal) {
-    final TextEditingController amountController = TextEditingController();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.6,
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) => StatefulBuilder(
+      builder: (context, setState) => Container(
+        height: MediaQuery.of(context).size.height * 0.85, // Tinggi diperbesar jadi 85%
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -3651,164 +3399,309 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 ),
               ),
               const SizedBox(height: 20),
-              
-              // Goal info
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFF69B4), Color(0xFFFF1493)],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Text(goal.emoji, style: const TextStyle(fontSize: 24)),
-                    ),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            goal.name,
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            'Rp ${NumberFormat('#,###').format(goal.currentAmount)} / Rp ${NumberFormat('#,###').format(goal.targetAmount)}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 25),
-              
               Text(
-                'Tambah Uang ke Target 💰',
+                'Tambah ke Wishlist 🛍️',
                 style: GoogleFonts.poppins(
-                  fontSize: 20,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFFFF69B4),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
               
-              // Amount input
-              Text(
-                'Jumlah Uang',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF333333),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: TextField(
-                  controller: amountController,
-                  keyboardType: TextInputType.number,
-                  style: GoogleFonts.poppins(),
-                  decoration: InputDecoration(
-                    hintText: 'Masukkan jumlah',
-                    hintStyle: GoogleFonts.poppins(color: Colors.grey),
-                    prefixText: 'Rp ',
-                    prefixStyle: GoogleFonts.poppins(
-                      color: const Color(0xFFFF69B4),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(20),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              
-              // Quick amount buttons
-              Text(
-                'Jumlah Cepat',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF333333),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  _buildQuickAmountButton('50K', 50000, amountController),
-                  const SizedBox(width: 10),
-                  _buildQuickAmountButton('100K', 100000, amountController),
-                  const SizedBox(width: 10),
-                  _buildQuickAmountButton('500K', 500000, amountController),
-                ],
-              ),
-              const Spacer(),
-              
-              // Save button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (amountController.text.isNotEmpty) {
-                      final amount = double.parse(amountController.text);
-                      final updatedGoal = SavingGoal(
-                        id: goal.id,
-                        name: goal.name,
-                        targetAmount: goal.targetAmount,
-                        currentAmount: goal.currentAmount + amount,
-                        emoji: goal.emoji,
-                        createdDate: goal.createdDate,
-                        targetDate: goal.targetDate,
-                      );
-                      
-                      await _dbHelper.updateSavingGoal(updatedGoal);
-                      await _loadAllData();
-                      Navigator.pop(context);
-                      
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Berhasil menambah Rp ${NumberFormat('#,###').format(amount)} ke ${goal.name}! 💰',
-                            style: GoogleFonts.poppins(),
-                          ),
-                          backgroundColor: const Color(0xFFFF69B4),
+              // BAGIAN FORM DALAM SCROLLABLE
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Name input
+                      Text(
+                        'Nama Barang',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF333333),
                         ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF69B4),
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: TextField(
+                          controller: nameController,
+                          style: GoogleFonts.poppins(),
+                          decoration: InputDecoration(
+                            hintText: 'Contoh: Dress cantik, Sepatu heels',
+                            hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(20),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      
+                      // Price input
+                      Text(
+                        'Harga',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF333333),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: TextField(
+                          controller: priceController,
+                          keyboardType: TextInputType.number,
+                          style: GoogleFonts.poppins(),
+                          decoration: InputDecoration(
+                            hintText: 'Masukkan harga',
+                            hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                            prefixText: 'Rp ',
+                            prefixStyle: GoogleFonts.poppins(
+                              color: const Color(0xFFFF69B4),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(20),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      
+                      // Emoji selection
+                      Text(
+                        'Pilih Emoji',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF333333),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 60,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: emojiOptions.length,
+                          itemBuilder: (context, index) {
+                            final emoji = emojiOptions[index];
+                            return GestureDetector(
+                              onTap: () => setState(() => selectedEmoji = emoji),
+                              child: Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: selectedEmoji == emoji 
+                                      ? const Color(0xFFFF69B4).withValues(alpha: 0.2)
+                                      : Colors.grey.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: selectedEmoji == emoji 
+                                        ? const Color(0xFFFF69B4)
+                                        : Colors.transparent,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Text(emoji, style: const TextStyle(fontSize: 24)),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      
+                      // Priority selection
+                      Text(
+                        'Prioritas',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF333333),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Column(
+                        children: priorities.map((priority) {
+                          return GestureDetector(
+                            onTap: () => setState(() => selectedPriority = priority['value']),
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: selectedPriority == priority['value']
+                                    ? priority['color'].withValues(alpha: 0.1)
+                                    : Colors.grey.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: selectedPriority == priority['value']
+                                      ? priority['color']
+                                      : Colors.transparent,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      color: priority['color'],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 15),
+                                  Text(
+                                    priority['label'],
+                                    style: GoogleFonts.poppins(
+                                      color: selectedPriority == priority['value']
+                                          ? priority['color']
+                                          : Colors.grey[700],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 30), // Extra space sebelum tombol
+                    ],
                   ),
-                  child: Text(
-                    'Tambah Uang 💰',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                ),
+              ),
+              
+              // TOMBOL SELALU TERLIHAT DI BAWAH (TIDAK IKUT SCROLL)
+              Container(
+                padding: const EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, -5),
+                    ),
+                  ],
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      // Validasi input
+                      if (nameController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Nama barang tidak boleh kosong!',
+                              style: GoogleFonts.poppins(),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+                      
+                      if (priceController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Harga tidak boleh kosong!',
+                              style: GoogleFonts.poppins(),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+
+                      try {
+                        final item = WishlistItem(
+                          name: nameController.text.trim(),
+                          price: double.parse(priceController.text),
+                          emoji: selectedEmoji,
+                          priority: selectedPriority,
+                          createdDate: DateTime.now(),
+                        );
+                        
+                        // Simpan ke database
+                        await _dbHelper.insertWishlistItem(item);
+                        
+                        // Refresh data
+                        await _loadAllData();
+                        
+                        // Tutup dialog jika context masih valid
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          
+                          // Tampilkan notifikasi sukses
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: [
+                                  Text(
+                                    '✅ ${item.emoji} ${item.name} berhasil ditambahkan!',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor: const Color(0xFFFF69B4),
+                              duration: const Duration(seconds: 3),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        // Handle error parsing harga
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Format harga tidak valid! Masukkan angka saja.',
+                              style: GoogleFonts.poppins(),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFF69B4),
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      elevation: 8,
+                      shadowColor: const Color(0xFFFF69B4).withValues(alpha: 0.4),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('🛍️', style: TextStyle(fontSize: 20)),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Tambah ke Wishlist',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -3817,8 +3710,236 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+  void _showAddMoneyToGoalDialog(SavingGoal goal) {
+  final TextEditingController amountController = TextEditingController();
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) => DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.8,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      builder: (_, scrollController) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height * 0.4,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Handle bar
+                      Center(
+                        child: Container(
+                          width: 50,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Goal info
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFFF69B4), Color(0xFFFF1493)],
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Text(goal.emoji, style: const TextStyle(fontSize: 24)),
+                            ),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    goal.name,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Rp ${NumberFormat('#,###').format(goal.currentAmount)} / Rp ${NumberFormat('#,###').format(goal.targetAmount)}',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+
+                      Text(
+                        'Tambah Uang ke Target 💰',
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFF69B4),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      Text(
+                        'Jumlah Uang',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF333333),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: TextField(
+                          controller: amountController,
+                          keyboardType: TextInputType.number,
+                          style: GoogleFonts.poppins(),
+                          decoration: InputDecoration(
+                            hintText: 'Masukkan jumlah',
+                            hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                            prefixText: 'Rp ',
+                            prefixStyle: GoogleFonts.poppins(
+                              color: const Color(0xFFFF69B4),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(20),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      Text(
+                        'Jumlah Cepat',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF333333),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      Row(
+                        children: [
+                          _buildQuickAmountButton('50K', 50000, amountController),
+                          const SizedBox(width: 10),
+                          _buildQuickAmountButton('100K', 100000, amountController),
+                          const SizedBox(width: 10),
+                          _buildQuickAmountButton('500K', 500000, amountController),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+
+                      // Save button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (amountController.text.isNotEmpty) {
+                              final amount = double.parse(amountController.text);
+                              final updatedGoal = SavingGoal(
+                                id: goal.id,
+                                name: goal.name,
+                                targetAmount: goal.targetAmount,
+                                currentAmount: goal.currentAmount + amount,
+                                emoji: goal.emoji,
+                                createdDate: goal.createdDate,
+                                targetDate: goal.targetDate,
+                              );
+
+                              await _dbHelper.updateSavingGoal(updatedGoal);
+                              await _loadAllData();
+
+                              if (!context.mounted) return;
+
+                              Navigator.pop(context);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Berhasil menambah Rp ${NumberFormat('#,###').format(amount)} ke ${goal.name}! 💰',
+                                    style: GoogleFonts.poppins(),
+                                  ),
+                                  backgroundColor: const Color(0xFFFF69B4),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF69B4),
+                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: Text(
+                            'Tambah Uang 💰',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}
 
   Widget _buildQuickAmountButton(String label, double amount, TextEditingController controller) {
     return Expanded(
@@ -3850,237 +3971,252 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
   // Delete methods
   void _deleteTransaction(int id) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          'Hapus Transaksi? 🗑️',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
-        content: Text(
-          'Kamu yakin mau hapus transaksi ini?',
-          style: GoogleFonts.poppins(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Batal',
-              style: GoogleFonts.poppins(color: Colors.grey),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              await _dbHelper.deleteTransaction(id);
-              await _loadAllData();
-              Navigator.pop(context);
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Transaksi berhasil dihapus! 🗑️',
-                    style: GoogleFonts.poppins(),
-                  ),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            },
-            child: Text(
-              'Hapus',
-              style: GoogleFonts.poppins(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        'Hapus Transaksi? 🗑️',
+        style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
       ),
-    );
-  }
+      content: Text(
+        'Kamu yakin mau hapus transaksi ini?',
+        style: GoogleFonts.poppins(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            'Batal',
+            style: GoogleFonts.poppins(color: Colors.grey),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            await _dbHelper.deleteTransaction(id);
+            await _loadAllData();
+
+            if (!context.mounted) return;
+
+            Navigator.pop(context);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Transaksi berhasil dihapus! 🗑️',
+                  style: GoogleFonts.poppins(),
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+          },
+          child: Text(
+            'Hapus',
+            style: GoogleFonts.poppins(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   void _deleteGoal(int id) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          'Hapus Target? 🎯',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
-        content: Text(
-          'Kamu yakin mau hapus target tabungan ini?',
-          style: GoogleFonts.poppins(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Batal',
-              style: GoogleFonts.poppins(color: Colors.grey),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              await _dbHelper.deleteSavingGoal(id);
-              await _loadAllData();
-              Navigator.pop(context);
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Target berhasil dihapus! 🗑️',
-                    style: GoogleFonts.poppins(),
-                  ),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            },
-            child: Text(
-              'Hapus',
-              style: GoogleFonts.poppins(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        'Hapus Target? 🎯',
+        style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
       ),
-    );
-  }
+      content: Text(
+        'Kamu yakin mau hapus target tabungan ini?',
+        style: GoogleFonts.poppins(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            'Batal',
+            style: GoogleFonts.poppins(color: Colors.grey),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            await _dbHelper.deleteSavingGoal(id);
+            await _loadAllData();
+
+            if (!context.mounted) return;
+
+            Navigator.pop(context);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Target berhasil dihapus! 🗑️',
+                  style: GoogleFonts.poppins(),
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+          },
+          child: Text(
+            'Hapus',
+            style: GoogleFonts.poppins(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   void _deleteWishlistItem(int id) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          'Hapus dari Wishlist? 🛍️',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
-        content: Text(
-          'Kamu yakin mau hapus item ini dari wishlist?',
-          style: GoogleFonts.poppins(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Batal',
-              style: GoogleFonts.poppins(color: Colors.grey),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              await _dbHelper.deleteWishlistItem(id);
-              await _loadAllData();
-              Navigator.pop(context);
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Item berhasil dihapus dari wishlist! 🗑️',
-                    style: GoogleFonts.poppins(),
-                  ),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            },
-            child: Text(
-              'Hapus',
-              style: GoogleFonts.poppins(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        'Hapus dari Wishlist? 🛍️',
+        style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
       ),
-    );
-  }
+      content: Text(
+        'Kamu yakin mau hapus item ini dari wishlist?',
+        style: GoogleFonts.poppins(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            'Batal',
+            style: GoogleFonts.poppins(color: Colors.grey),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            await _dbHelper.deleteWishlistItem(id);
+            await _loadAllData();
+
+            if (!context.mounted) return;
+
+            Navigator.pop(context);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Item berhasil dihapus dari wishlist! 🗑️',
+                  style: GoogleFonts.poppins(),
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+          },
+          child: Text(
+            'Hapus',
+            style: GoogleFonts.poppins(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   void _buyWishlistItem(WishlistItem item) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          'Beli Item? 🛒',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Kamu mau beli ${item.name}?',
-              style: GoogleFonts.poppins(),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Harga: Rp ${NumberFormat('#,###').format(item.price)}',
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFFFF69B4),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Item akan dihapus dari wishlist dan ditambahkan sebagai transaksi pengeluaran.',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Batal',
-              style: GoogleFonts.poppins(color: Colors.grey),
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        'Beli Item? 🛒',
+        style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Kamu mau beli ${item.name}?',
+            style: GoogleFonts.poppins(),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Harga: Rp ${NumberFormat('#,###').format(item.price)}',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFFF69B4),
             ),
           ),
-          TextButton(
-            onPressed: () async {
-              // Add as expense transaction
-              final transaction = Transaction(
-                type: 'expense',
-                amount: item.price,
-                category: 'Belanja',
-                description: item.name,
-                date: DateTime.now(),
-                wallet: 'Cash',
-              );
-              
-              await _dbHelper.insertTransaction(transaction);
-              await _dbHelper.deleteWishlistItem(item.id!);
-              await _loadAllData();
-              Navigator.pop(context);
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Yeay! ${item.name} berhasil dibeli! 🛒✨',
-                    style: GoogleFonts.poppins(),
-                  ),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            },
-            child: Text(
-              'Beli Sekarang',
-              style: GoogleFonts.poppins(
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-              ),
+          const SizedBox(height: 10),
+          Text(
+            'Item akan dihapus dari wishlist dan ditambahkan sebagai transaksi pengeluaran.',
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: Colors.grey,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
-    );
-  }
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            'Batal',
+            style: GoogleFonts.poppins(color: Colors.grey),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            final transaction = Transaction(
+              type: 'expense',
+              amount: item.price,
+              category: 'Belanja',
+              description: item.name,
+              date: DateTime.now(),
+              wallet: 'Cash',
+            );
+
+            await _dbHelper.insertTransaction(transaction);
+            await _dbHelper.deleteWishlistItem(item.id!);
+            await _loadAllData();
+
+            if (!context.mounted) return;
+
+            Navigator.pop(context);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Yeay! ${item.name} berhasil dibeli! 🛒✨',
+                  style: GoogleFonts.poppins(),
+                ),
+                backgroundColor: Colors.green,
+              ),
+            );
+          },
+          child: Text(
+            'Beli Sekarang',
+            style: GoogleFonts.poppins(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   @override
   void dispose() {
