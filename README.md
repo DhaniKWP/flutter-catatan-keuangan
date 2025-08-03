@@ -5,7 +5,7 @@ Aplikasi **Flutter Catatan Keuangan** adalah aplikasi pencatat pemasukan dan pen
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)
 ![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-green)
-![License](https://img.shields.io/github/license/DhaniKWP/flutter-catatan-keungan)
+![License](https://img.shields.io/github/license/DhaniKWP/flutter-catatan-keuangan)
 
 ---
 
