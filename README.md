@@ -33,7 +33,7 @@ Aplikasi **Flutter Catatan Keuangan** adalah aplikasi pencatat pemasukan dan pen
 
 1. **Clone repositori ini**
    ```bash
-   git clone https://github.com/DhaniKWP/flutter-catatan-keungan.git
+   git clone https://github.com/DhaniKWP/flutter-catatan-keuangan.git
    cd flutter-catatan-keungan
    ```
 
