@@ -23,9 +23,9 @@ Aplikasi **Flutter Catatan Keuangan** adalah aplikasi pencatat pemasukan dan pen
 
 ## 📸 Screenshot
 
-| Home | Tambah Transaksi | Grafik Bulanan |
-|------|------------------|----------------|
-| ![home](assets/screenshots/home.jpg) | ![add](assets/screenshots/transaksi.jpg) | ![chart](assets/screenshots/chart.jpg) |
+| Home | Tambah Transaksi | Grafik Bulanan | Histori Transaksi | Wishlist Barang | Target Tabungan | Statistik Keuangan | Pie Chart Pengeluaran |
+|------|------------------|----------------|-------------------|-----------------|-----------------|--------------------|----------------------|
+| ![home](assets/screenshots/home.jpg) | ![add](assets/screenshots/transaksi.jpg) | ![chart](assets/screenshots/chart.jpg) | ![add](assets/screenshots/history.jpg) | ![add](assets/screenshots/wishlist.jpg) | ![add](assets/screenshots/target.jpg) | ![add](assets/screenshots/statistik.jpg) | ![add](assets/screenshots/grafik.jpg) |
 
 ---
 
