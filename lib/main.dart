@@ -667,8 +667,6 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             children: [
               _buildHeader(),
               const SizedBox(height: 20),
-              _buildEnhancedTabBar(),
-              const SizedBox(height: 20),
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
@@ -685,6 +683,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           ),
         ),
       ),
+      bottomNavigationBar: _buildEnhancedTabBar(),
       floatingActionButton: _buildCuteFloatingActionButton(context),
     );
   }
@@ -773,25 +772,24 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   );
 }
 
-
-  Widget _buildEnhancedTabBar() {
+Widget _buildEnhancedTabBar() {
   return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    height: 65, // Diperbesar dari 55 ke 65
+    margin: const EdgeInsets.fromLTRB(20, 0, 20, 20), // margin dari kiri, atas, kanan, bawah
+    height: 75, // Tinggi diperbesar
     decoration: BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(30), // Diperbesar radius
+      borderRadius: BorderRadius.circular(35), // Radius diperbesar
       boxShadow: [
         BoxShadow(
-          color: Colors.pink.withOpacity(0.2),
-          blurRadius: 15,
-          offset: const Offset(0, 8),
+          color: Colors.pink.withOpacity(0.25),
+          blurRadius: 20,
+          offset: const Offset(0, 10),
         ),
       ],
     ),
     clipBehavior: Clip.hardEdge,
     child: Padding(
-      padding: const EdgeInsets.all(8), // Padding lebih besar
+      padding: const EdgeInsets.all(8),
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
@@ -800,12 +798,12 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(27), // Sesuaikan dengan padding
           boxShadow: [
             BoxShadow(
-              color: Colors.pink.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.pink.withOpacity(0.4),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
@@ -813,15 +811,15 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         unselectedLabelColor: const Color(0xFFFF69B4),
         labelStyle: GoogleFonts.poppins(
           fontWeight: FontWeight.w600, 
-          fontSize: 12, // Diperbesar dari 10 ke 12
+          fontSize: 13, // Sedikit diperbesar
         ),
         unselectedLabelStyle: GoogleFonts.poppins(
-          fontSize: 11, // Diperbesar dari 9 ke 11
+          fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
         isScrollable: false,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        indicatorPadding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+        labelPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        indicatorPadding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
         dividerColor: Colors.transparent,
         overlayColor: WidgetStateProperty.all(Colors.transparent),
         splashFactory: NoSplash.splashFactory,
