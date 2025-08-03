@@ -507,6 +507,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   List<SavingGoal> _savingGoals = [];
   List<WishlistItem> _wishlistItems = [];
   List<UserBadge> _badges = [];
+  List<Transaction> _allTransactions = [];
   String _selectedFilter = 'daily';
   String _selectedWallet = 'All';
 
@@ -520,11 +521,19 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   }
 
   Future<void> _loadAllData() async {
+    await _loadAllTransactions();
     await _loadTransactions();
     await _loadSavingGoals();
     await _loadWishlistItems();
     await _loadBadges();
     await _checkAndAwardBadges();
+  }
+
+  Future<void> _loadAllTransactions() async {
+    final allTransactions = await _dbHelper.getTransactions();
+    setState(() {
+      _allTransactions = allTransactions;
+    });
   }
 
   Future<void> _loadTransactions() async {
@@ -767,40 +776,92 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
   Widget _buildEnhancedTabBar() {
   return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8), // Tambah margin agar tidak mepet
-    height: 55,
+    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    height: 65, // Diperbesar dari 55 ke 65
     decoration: BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(30), // Diperbesar radius
       boxShadow: [
         BoxShadow(
           color: Colors.pink.withOpacity(0.2),
-          blurRadius: 10,
-          offset: const Offset(0, 5),
+          blurRadius: 15,
+          offset: const Offset(0, 8),
         ),
       ],
     ),
     clipBehavior: Clip.hardEdge,
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6), // Tambahkan padding dalam
+      padding: const EdgeInsets.all(8), // Padding lebih besar
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
-          color: const Color(0xFFFF69B4),
-          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            colors: [Color(0xFFFF69B4), Color(0xFFFF1493)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.pink.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         labelColor: Colors.white,
         unselectedLabelColor: const Color(0xFFFF69B4),
-        labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 10),
-        unselectedLabelStyle: GoogleFonts.poppins(fontSize: 9),
+        labelStyle: GoogleFonts.poppins(
+          fontWeight: FontWeight.w600, 
+          fontSize: 12, // Diperbesar dari 10 ke 12
+        ),
+        unselectedLabelStyle: GoogleFonts.poppins(
+          fontSize: 11, // Diperbesar dari 9 ke 11
+          fontWeight: FontWeight.w500,
+        ),
         isScrollable: false,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 4), // Supaya antar-tab punya jarak
-        tabs: const [
-          Tab(text: '💰 Home'),
-          Tab(text: '📝 Transaksi'),
-          Tab(text: '🎯 Goal'),
-          Tab(text: '🛍️ Wish'),
-          Tab(text: '🏆 Badge'),
+        labelPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        indicatorPadding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+        dividerColor: Colors.transparent,
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        splashFactory: NoSplash.splashFactory,
+        tabs: [
+          _buildCustomTab('💰', 'Home'),
+          _buildCustomTab('📝', 'Transaksi'),
+          _buildCustomTab('🎯', 'Goal'),
+          _buildCustomTab('🛍️', 'Wish'),
+          _buildCustomTab('🏆', 'Badge'),
+        ],
+      ),
+    ),
+  );
+}
+
+// Helper method untuk membuat custom tab yang lebih rapi
+Widget _buildCustomTab(String emoji, String text) {
+  return Tab(
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            emoji,
+            style: const TextStyle(fontSize: 16), // Emoji lebih besar
+          ),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              text,
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
         ],
       ),
     ),
@@ -1719,7 +1780,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           children: [
             Expanded(
               child: Text(
-                'Target Tabungan 🎯',
+                'Target Tabungan',
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -1772,7 +1833,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             children: [
               Expanded(
                 child: Text(
-                  'Wishlist Belanja 🛍️',
+                  'Wishlist Belanja',
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -2316,25 +2377,46 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
 
   Widget _buildMonthlyChart() {
-    // Get data for the last 6 months
-    final now = DateTime.now();
-    List<FlSpot> spots = [];
-    List<String> months = [];
+  // Get data for the last 6 months
+  final now = DateTime.now();
+  List<FlSpot> spots = [];
+  List<String> months = [];
+  double maxExpense = 0;
+  
+  for (int i = 5; i >= 0; i--) {
+    final month = DateTime(now.year, now.month - i, 1);
+    final nextMonth = DateTime(now.year, now.month - i + 1, 1);
     
-    for (int i = 5; i >= 0; i--) {
-      final month = DateTime(now.year, now.month - i, 1);
-      final nextMonth = DateTime(now.year, now.month - i + 1, 1);
-      
-      final monthlyExpense = _transactions
-          .where((t) => t.type == 'expense' &&
-                       t.date.isAfter(month.subtract(const Duration(seconds: 1))) &&
-                       t.date.isBefore(nextMonth))
-          .fold(0.0, (sum, t) => sum + t.amount);
-      
-      spots.add(FlSpot((5 - i).toDouble(), monthlyExpense / 1000000)); // Convert to millions
-      months.add(DateFormat('MMM').format(month));
+    // ✅ FIX: Get all transactions from database instead of using filtered _transactions
+    // Use FutureBuilder or make this async, but for now we'll use a sync approach
+    // by getting all transactions that are already loaded
+    
+    // Get monthly expense by filtering ALL transactions, not just _transactions
+    double monthlyExpense = 0;
+    
+    // We need to get all transactions from database for this chart
+    // Since we can't make this async easily, let's use a different approach
+    // We'll use the stored transactions but get them differently
+    
+    // Alternative: Use a class variable to store all transactions
+    monthlyExpense = _allTransactions
+        .where((t) => t.type == 'expense' &&
+                     t.date.isAfter(month.subtract(const Duration(seconds: 1))) &&
+                     t.date.isBefore(nextMonth))
+        .fold(0.0, (sum, t) => sum + t.amount);
+    
+    // Simpan nilai maksimum untuk scaling
+    if (monthlyExpense > maxExpense) {
+      maxExpense = monthlyExpense;
     }
+    
+    spots.add(FlSpot((5 - i).toDouble(), monthlyExpense));
+    months.add(DateFormat('MMM').format(month));
+  }
 
+  // Rest of the function remains the same...
+  // Jika tidak ada data, tampilkan chart kosong
+  if (maxExpense == 0) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -2348,72 +2430,308 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           ),
         ],
       ),
-      child: LineChart(
-        LineChartData(
-          gridData: const FlGridData(show: false),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 40,
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    '${value.toInt()}M',
-                    style: GoogleFonts.poppins(
-                      fontSize: 10,
-                      color: Colors.grey,
-                    ),
-                  );
-                },
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('📈', style: TextStyle(fontSize: 48)),
+            const SizedBox(height: 16),
+            Text(
+              'Belum ada data pengeluaran',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.grey,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  if (value.toInt() < months.length) {
-                    return Text(
-                      months[value.toInt()],
-                      style: GoogleFonts.poppins(
-                        fontSize: 10,
-                        color: Colors.grey,
-                      ),
-                    );
-                  }
-                  return const Text('');
-                },
+            Text(
+              'Mulai catat pengeluaran untuk melihat grafik',
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Colors.grey,
               ),
-            ),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          ),
-          borderData: FlBorderData(show: false),
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFF69B4), Color(0xFFFF1493)],
-              ),
-              barWidth: 3,
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFFFF69B4).withValues(alpha: 0.3),
-                    const Color(0xFFFF69B4).withValues(alpha: 0.1),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              dotData: const FlDotData(show: true),
             ),
           ],
         ),
       ),
     );
   }
+
+  // Tentukan interval Y-axis yang lebih smart
+  double yInterval;
+  if (maxExpense > 10000000) { // > 10 juta
+    yInterval = 2000000; // interval 2 juta
+  } else if (maxExpense > 5000000) { // > 5 juta
+    yInterval = 1000000; // interval 1 juta
+  } else if (maxExpense > 1000000) { // > 1 juta
+    yInterval = 500000; // interval 500rb
+  } else if (maxExpense > 500000) { // > 500rb
+    yInterval = 200000; // interval 200rb
+  } else {
+    yInterval = 100000; // interval 100rb
+  }
+
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.pink.withValues(alpha: 0.1),
+          blurRadius: 10,
+          offset: const Offset(0, 5),
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        // Header info
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Pengeluaran 6 Bulan Terakhir',
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF333333),
+                  ),
+                ),
+                Text(
+                  'Maksimal: Rp ${NumberFormat('#,###').format(maxExpense)}',
+                  style: GoogleFonts.poppins(
+                    fontSize: 11,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF69B4).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'Trend',
+                style: GoogleFonts.poppins(
+                  fontSize: 10,
+                  color: const Color(0xFFFF69B4),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        
+        // Chart
+        Expanded(
+          child: LineChart(
+            LineChartData(
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                horizontalInterval: yInterval,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: Colors.grey.withValues(alpha: 0.2),
+                    strokeWidth: 1,
+                    dashArray: [5, 5],
+                  );
+                },
+              ),
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 60,
+                    interval: yInterval,
+                    getTitlesWidget: (value, meta) {
+                      if (value == 0) return const Text('');
+                      
+                      String label;
+                      if (value >= 1000000) {
+                        label = '${(value / 1000000).toStringAsFixed(value % 1000000 == 0 ? 0 : 1)}M';
+                      } else if (value >= 1000) {
+                        label = '${(value / 1000).toStringAsFixed(value % 1000 == 0 ? 0 : 0)}K';
+                      } else {
+                        label = value.toStringAsFixed(0);
+                      }
+                      
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Text(
+                          label,
+                          style: GoogleFonts.poppins(
+                            fontSize: 10,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 30,
+                    getTitlesWidget: (value, meta) {
+                      if (value.toInt() < months.length && value.toInt() >= 0) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            months[value.toInt()],
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        );
+                      }
+                      return const Text('');
+                    },
+                  ),
+                ),
+                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              ),
+              borderData: FlBorderData(
+                show: true,
+                border: Border(
+                  left: BorderSide(color: Colors.grey.withValues(alpha: 0.3), width: 1),
+                  bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.3), width: 1),
+                ),
+              ),
+              minX: 0,
+              maxX: 5,
+              minY: 0,
+              maxY: (maxExpense * 1.2).ceilToDouble(), // Tambah 20% ruang di atas
+              lineTouchData: LineTouchData(
+                enabled: true,
+                touchTooltipData: LineTouchTooltipData(
+                 tooltipBgColor: const Color(0xFFFF69B4),
+                  tooltipRoundedRadius: 8,
+                  getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                    return touchedBarSpots.map((barSpot) {
+                      final monthIndex = barSpot.x.toInt();
+                      final amount = barSpot.y;
+                      
+                      return LineTooltipItem(
+                        '${months[monthIndex]}\nRp ${NumberFormat('#,###').format(amount)}',
+                        GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+                handleBuiltInTouches: true,
+                getTouchLineStart: (data, index) => 0,
+                getTouchLineEnd: (data, index) => double.infinity,
+                touchSpotThreshold: 50,
+              ),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: spots,
+                  isCurved: true,
+                  curveSmoothness: 0.3,
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFFF69B4),
+                      Color(0xFFFF1493),
+                      Color(0xFFDC143C),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  barWidth: 4,
+                  isStrokeCapRound: true,
+                  dotData: FlDotData(
+                    show: true,
+                    getDotPainter: (spot, percent, barData, index) {
+                      return FlDotCirclePainter(
+                        radius: 6,
+                        color: Colors.white,
+                        strokeWidth: 3,
+                        strokeColor: const Color(0xFFFF69B4),
+                      );
+                    },
+                  ),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFFFF69B4).withValues(alpha: 0.3),
+                        const Color(0xFFFF69B4).withValues(alpha: 0.1),
+                        const Color(0xFFFF69B4).withValues(alpha: 0.05),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  shadow: Shadow(
+                    color: const Color(0xFFFF69B4).withValues(alpha: 0.3),
+                    offset: const Offset(0, 3),
+                    blurRadius: 6,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        
+        // Legend dan info tambahan
+        const SizedBox(height: 15),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFF69B4).withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: const Color(0xFFFF69B4).withValues(alpha: 0.2),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFF69B4), Color(0xFFFF1493)],
+                  ),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Pengeluaran Bulanan - Ketuk titik untuk detail',
+                  style: GoogleFonts.poppins(
+                    fontSize: 11,
+                    color: const Color(0xFFFF69B4),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
     Widget _buildCuteFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
